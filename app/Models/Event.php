@@ -20,23 +20,15 @@ class Event extends Model
     protected $fillable = ['date', 'title', 'name', 'text'];
 
     public function getPrevItemAttribute() {
-        $previous = Event::where('id', '<', $this->id)->max('id');
-        if (!$previous) {
-            return null;
-        }
-        return $previous;
+        return self::where([['date', '<', $this->date]])->orWhere([['date', '=', $this->date],['id', '<', $this->id]])->orderByDesc('date')->orderByDesc('id')->first();
     }
 
     public function getNextItemAttribute() {
-        $next = Event::where('id', '>', $this->id)->min('id');
-        if (!$next) {
-            return null;
-        }
-        return $next;
+        return self::where([['date', '>', $this->date]])->orWhere([['date', '=', $this->date],['id', '>', $this->id]])->orderBy('date')->orderBy('id')->first();
     }
 
     public function getList() {
-        return $this->orderBy('date', 'DESC')->paginate(10);
+        return $this->orderBy('date', 'DESC')->orderBy('id', 'DESC')->paginate(10);
     }
 
     public function storeData($input) {

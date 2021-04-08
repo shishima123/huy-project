@@ -14,5 +14,8 @@ use App\Http\Controllers\EventController;
 |
 */
 
+Route::get('/', function() {
+    return redirect()->route('events.index');
+});
 Route::resource('/events', EventController::class)->only(['index', 'create', 'store', 'show']);
 Route::post('/events/confirm', [EventController::class, 'confirm'])->name('events.confirm');
